@@ -20,5 +20,7 @@ export default {
   //   // dev: '',
   //   // pro: ''
   // }
-  baseUrl: "http://10.193.7.132:8080/"
+  baseUrl: "http://10.193.7.111:8080/",
+  // 主页名称
+  homeName: "home"
 };

@@ -63,7 +63,7 @@ export default {
     addTag(state, { route, type = "unshift" }) {
       let router = getRouteTitleHandled(route);
       if (!routeHasExist(state.tagNavList, router)) {
-        if (type === "push") state.tagNavList.push(router);
+        if (type === "push" && router !== "Login") state.tagNavList.push(router);
         else {
           if (router.name === "home") state.tagNavList.unshift(router);
           else state.tagNavList.splice(1, 0, router);

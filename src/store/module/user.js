@@ -42,6 +42,8 @@ export default {
         })
           .then(res => {
             const data = res.data;
+            console.log("handleLogin data");
+            console.log(data);
             commit("setToken", data.token);
             resolve();
           })

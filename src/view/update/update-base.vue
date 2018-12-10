@@ -20,7 +20,7 @@
       <form-item >
         <!--文件上传-->
         <div style="display: inline-flex;">
-          <upload action="http://10.193.7.132:8080/update/update_single/update_file "
+          <upload action="http://10.193.7.111:8080/update/update_single/update_file "
                   accept=".xls, .xlsx, .csv"
                   :before-upload="beforeUpload"
                   :data="formItem"
@@ -100,7 +100,7 @@ export default {
       let current = this;
       axios
         .post(
-          "http://10.193.7.132:8080/update/update_single/update_file",
+          "http://10.193.7.111:8080/update/update_single/update_file",
           this.updateFormData
         )
         .then(function(res) {
@@ -129,7 +129,7 @@ export default {
       let current = this;
       axios
         .post(
-          "http://10.193.7.132:8080/update/update_single/update_file",
+          "http://10.193.7.111:8080/update/update_single/update_file",
           this.updateFormData
         )
         .then(function(res) {
@@ -197,7 +197,7 @@ export default {
                 console.log("ok state");
                 axios
                   .post(
-                    "http://10.193.7.132:8080/update/update_single/update_file",
+                    "http://10.193.7.111:8080/update/update_single/update_file",
                     this.updateFormData
                   )
                   .then(function(res) {

@@ -105,9 +105,61 @@ export const read = (data, type) => {
     return {header, results};
 }
 
+function saveAs(obj, fileName) {
+  let tmpa = document.createElement("a");
+  tmpa.download = fileName || "下载";
+  tmpa.href = URL.createObjectURL(obj);
+  tmpa.click();
+  setTimeout(function() {
+    URL.revokeObjectURL(obj);
+  }, 100);
+}
+
+function s2ab(s) {
+  if (typeof ArrayBuffer !== "undefined") {
+    let buf = new ArrayBuffer(s.length);
+    let view = new Uint8Array(buf);
+    for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
+    return buf;
+  } else {
+    let buf = new Array(s.length);
+    for (let i = 0; i !== s.length; ++i) buf[i] = s.charCodeAt(i) & 0xff;
+    return buf;
+  }
+}
+
+/**
+ * js-xlsx table转sheet格式
+ * @param id
+ * @returns {WorkSheet}
+ */
+export const tableToSheet = (id) =>{
+  return  XLSX.utils.table_to_sheet(
+    document.getElementsByClassName(id)[0]
+  );
+};
+/**
+ * 导出多表头到excel
+ * @param wopts
+ * @param wb
+ * @param filename
+ */
+export const exportMergeTable = (wopts, wb, filename) =>{
+  saveAs(
+    new Blob([s2ab(XLSX.write(wb, wopts))], {
+      type: "application/octet-stream"
+    }),
+    filename +
+    "." +
+    (wopts.bookType === "biff2" ? "xls" : wopts.bookType)
+  );
+};
+
 export default {
   export_table_to_excel,
   export_array_to_excel,
   export_json_to_excel,
-  read
+  read,
+  exportMergeTable,
+  tableToSheet
 }

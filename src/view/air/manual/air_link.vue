@@ -166,7 +166,7 @@ export default {
       linkHeader: [],
       linkContent: [],
       // 缓存数据
-      detailDataList: [],
+      // detailDataList: [],
 
       // 筛选项
       // 时间
@@ -226,10 +226,10 @@ export default {
           console.log(err);
         });
     },
-    saveData(data, name) {
-      let dataSave = Object.assign(data);
-      this.detailDataList[name] = dataSave;
-    },
+    // saveData(data, name) {
+    //   let dataSave = Object.assign(data);
+    //   this.detailDataList[name] = dataSave;
+    // },
     // 查看单个详细信息
     viewLinkDetail(params) {
       const startTime = this.timeStartTemp;

@@ -81,7 +81,7 @@ import { getStatisticsCostLink } from "@/api/data";
 // import { statisticsDataTest, statisticsLinkTest, testHeader, testContent } from '@/api/testData'
 
 export default {
-  name: "statistics_cost_link",
+  name: "statistics_cost_link_original",
 
   data() {
     return {
@@ -316,7 +316,6 @@ export default {
           time: this.timeSelected
         })
           .then(res => {
-            console.log(res.data);
             this.statisticsOriginal = res.data;
             this.updateData(
               this.statisticsOriginal,

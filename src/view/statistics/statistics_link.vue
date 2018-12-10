@@ -241,7 +241,7 @@ export default {
           }
         },
         {
-          title: "查看详细",
+          title: " ",
           key: "查看详细",
           width: 150,
           align: "center",

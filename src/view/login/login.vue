@@ -17,6 +17,7 @@
 
 <script>
 import LoginForm from "_c/login-form";
+// import { login, logout, getUserInfo } from "@/api/user";
 import { mapActions } from "vuex";
 export default {
   components: {

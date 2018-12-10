@@ -11,12 +11,12 @@
                   时间
                   <div slot="content" style="display: -webkit-inline-box" >
                     <!--<row>-->
-                    <i-col >开始时间：
-                      <date-picker type="month" placeholder="Select month" style="width: 200px" @on-change="getTimeStart" ></date-picker>
-                    </i-col>
-                    <i-col style="margin-left: 27px;">结束时间：
-                      <date-picker type="month"  placeholder="Select month" style="width: 200px;" @on-change="getTimeEnd" ></date-picker>
-                    </i-col>
+                      <i-col >开始时间：
+                        <date-picker type="month" placeholder="Select month" style="width: 200px" @on-change="getTimeStart" ></date-picker>
+                      </i-col>
+                      <i-col style="margin-left: 27px;">结束时间：
+                        <date-picker type="month"  placeholder="Select month" style="width: 200px;" @on-change="getTimeEnd" ></date-picker>
+                      </i-col>
                     <!--</row>-->
                   </div>
                 </panel>
@@ -86,7 +86,7 @@ import {
 // import { employeeTest } from '@/api/testData'
 
 export default {
-  name: "air_base",
+  name: "air_base_original",
 
   data() {
     return {

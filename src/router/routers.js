@@ -42,6 +42,24 @@ export default [
             component: () => import('@/view/air/manual/air_base.vue')
           },
           {
+            path: 'air_base_easytable',
+            name: 'air_base_easytable',
+            meta: {
+              icon: 'ios-grid',
+              title: 'easytable'
+            },
+            component: () => import('@/view/air/manual/air_base_easytable.vue')
+          },
+          {
+            path: 'air_base_original',
+            name: 'air_base_original',
+            meta: {
+              icon: 'ios-grid',
+              title: 'original'
+            },
+            component: () => import('@/view/air/manual/air_base_original.vue')
+          },
+          {
             path: 'air_link',
             name: 'air_link',
             meta: {
@@ -808,6 +826,26 @@ export default [
             },
             component: () => import('@/view/statistics/statistics_cost_link.vue')
           },
+        //  test start -- statistics_cost_link
+          {
+            path: 'statistics_cost_link_original',
+            name: 'statistics_cost_link_original',
+            meta: {
+              icon: 'ios-grid',
+              title: 'original'
+            },
+            component: () => import('@/view/statistics/statistics_cost_link_original.vue')
+          },
+          {
+            path: 'statistics_cost_link_easytable',
+            name: 'statistics_cost_link_easytable',
+            meta: {
+              icon: 'ios-grid',
+              title: 'easytable'
+            },
+            component: () => import('@/view/statistics/statistics_cost_link_easytable.vue')
+          }
+        //  test end -- statistics_cost_link
         ]
       },
       {
@@ -879,7 +917,7 @@ export default [
     component: Main,
     meta: {
       hideInMenu: true,
-      // notCache: true
+      notCache: true
     },
     children: [
       {
@@ -888,7 +926,7 @@ export default [
         meta: {
           hideInMenu: true,
           title: '首页',
-          // notCache: true
+          notCache: true
         },
         component: () => import('@/view/update/update-base.vue')
         // component: () => import('@/view/single-page/home')

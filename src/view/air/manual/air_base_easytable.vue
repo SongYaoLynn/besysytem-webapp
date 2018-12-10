@@ -11,12 +11,12 @@
                   时间
                   <div slot="content" style="display: -webkit-inline-box" >
                     <!--<row>-->
-                    <i-col >开始时间：
-                      <date-picker type="month" placeholder="Select month" style="width: 200px" @on-change="getTimeStart" ></date-picker>
-                    </i-col>
-                    <i-col style="margin-left: 27px;">结束时间：
-                      <date-picker type="month"  placeholder="Select month" style="width: 200px;" @on-change="getTimeEnd" ></date-picker>
-                    </i-col>
+                      <i-col >开始时间：
+                        <date-picker type="month" placeholder="Select month" style="width: 200px" @on-change="getTimeStart" ></date-picker>
+                      </i-col>
+                      <i-col style="margin-left: 27px;">结束时间：
+                        <date-picker type="month"  placeholder="Select month" style="width: 200px;" @on-change="getTimeEnd" ></date-picker>
+                      </i-col>
                     <!--</row>-->
                   </div>
                 </panel>
@@ -55,12 +55,30 @@
       </div>
       <div>
         <!--<spin fix v-if="spinShow">加载中...</spin>-->
-        <i-table  :columns="baseHeader" :data="baseContent" size="small" height="500" ref="table"></i-table>
+        <!--<i-table  :columns="baseHeader" :data="baseContent" size="small" height="500" ref="table"></i-table>-->
+        <v-table
+          is-vertical-resize
+          is-horizontal-resize
+          column-width-drag
+          style="width:100%"
+          :height='400'
+          :min-height='100'
+          :vertical-resize-offset='5'
+          :columns="baseHeader"
+          :table-data="baseContentCurrent"
+          row-hover-color="#eee"
+          row-click-color="#edf7ff"
+          :paging-index="(pageIndex-1)*pageSize"
+          ref="table"
+        ></v-table>
         <br>
-        <!--{{currentPage}} {{ pageSize}}-->
-        <!--<page :total="50" @on-change="getCurrentPage" @on-page-size-change="getPageSize" show-total show-sizer  show-elevator />-->
-        <i-button type="primary" size="large" @click="exportData(1)"><icon type="ios-download-outline"></icon> 导出到csv文件</i-button>
+        <div class="mt20 mb20 bold"></div>
+        <v-pagination @page-change="pageChange" @page-size-change="pageSizeChange" :total="baseContent.length" :page-size="pageSize" :layout="['total', 'prev', 'pager', 'next', 'sizer', 'jumper']"></v-pagination>
       </div>
+        <br>
+        <i-button type="primary" size="large" @click="exportData(1)"><icon type="ios-download-outline"></icon> 导出到csv文件</i-button>
+      <!--</div>-->
+
 
       <!--<i-button @click="test">test</i-button>-->
       <!--{{ 'test:'+ testchange}}-->
@@ -74,6 +92,12 @@
 <script>
 // import Table from '_c/tables'
 import "_c/tables/index.less";
+// 引入样式
+import "vue-easytable/libs/themes-base/index.css";
+// 导入 table 和 分页组件
+import { VTable, VPagination } from "vue-easytable";
+import Csv from "iview/src/utils/csv";
+import ExportCsv from "iview/src/components/table/export-csv";
 import { manualData } from "@/data/manual";
 import { getBaseGroupData, getBaseDataByName } from "@/api/data";
 import {
@@ -86,10 +110,14 @@ import {
 // import { employeeTest } from '@/api/testData'
 
 export default {
-  name: "air_base",
-
+  name: "air_base_easytable",
+  components: {
+    VTable,
+    VPagination
+  },
   data() {
     return {
+      // isLoading: true,
       // 筛选分类原始数据
       group: manualData.air,
       // 多选组合
@@ -126,11 +154,15 @@ export default {
       baseData: {},
       baseHeader: [],
       baseContent: [],
+      //当前分页的数据
+      baseContentCurrent: [],
+      pageIndex: 1,
+      pageSize: 20,
       // 加载中
       spinShow: true,
       // 页面切换
-      currentPage: 1,
-      pageSize: 10
+      currentPage: 1
+      // pageSize: 10
       // test
     };
   },
@@ -139,13 +171,12 @@ export default {
       for (let i = 0; i < data.length; i++) {
         let temp = {
           title: "",
-          key: "",
-          fixed: "",
-          width: 100,
-          ellipsis: true,
-          tooltip: true
+          field: "",
+          isFrozen: false,
+          width: 100
         };
         temp.title = data[i];
+        temp.field = data[i];
         temp.key = data[i];
 
         if (
@@ -154,14 +185,14 @@ export default {
           data[i] === "应发合计" ||
           data[i] === "人工成本"
         ) {
-          temp.fixed = "left";
+          temp.isFrozen = true;
           if (data[i] === "身份证号码") {
             temp.width = 170;
           }
         }
         if (manualData.nonNumberHeader.indexOf(data[i]) < 0) {
-          temp.render = (h, params) => {
-            return h("div", params.row[data[i]].toFixed(2));
+          temp.formatter = function(rowData, rowIndex, pagingIndex, field) {
+            return rowData[data[i]].toFixed(2);
           };
         }
         this.baseHeader.push(temp);
@@ -185,26 +216,24 @@ export default {
       this.baseHeader = [];
       this.baseContent = [];
       this.baseData = data;
-      console.time("getHeader");
       this.baseHeader = this.getHeader(this.baseData.header);
-      console.timeEnd("getHeader");
-      console.time("getAllResult");
+      console.log(this.baseHeader);
       this.baseContent = this.getAllResult(
         this.baseData.records,
         this.baseData.average,
         this.baseData.statistics
       );
-      console.timeEnd("getAllResult");
+      this.getCurrentTableData();
 
       this.spinShow = false;
     },
-    getCurrentPage(page) {
-      this.currentPage = page;
-    },
-    getPageSize(size) {
-      console.log(size);
-      this.pageSize = size;
-    },
+    // getCurrentPage(page) {
+    //   this.currentPage = page;
+    // },
+    // getPageSize(size) {
+    //   console.log(size);
+    //   this.pageSize = size;
+    // },
 
     searchByGroup() {
       console.log("searchByGroup");
@@ -257,12 +286,61 @@ export default {
     checkAllGroupChange(data, current) {
       checkAllGroupChange(data, current);
     },
+    //分页
+    getCurrentTableData() {
+      this.baseContentCurrent = this.baseContent.slice(
+        (this.pageIndex - 1) * this.pageSize,
+        this.pageIndex * this.pageSize
+      );
+      console.log("baseContentCurrent");
+      console.log(this.baseContentCurrent);
+    },
+    pageChange(pageIndex) {
+      this.pageIndex = pageIndex;
+      this.getCurrentTableData();
+      console.log(pageIndex);
+    },
+    pageSizeChange(pageSize) {
+      this.pageIndex = 1;
+      this.pageSize = pageSize;
+      this.getCurrentTableData();
+    },
+    //导出
+    exportCsv(params) {
+      if (params.filename) {
+        if (params.filename.indexOf(".csv") === -1) {
+          params.filename += ".csv";
+        }
+      } else {
+        params.filename = "table.csv";
+      }
+
+      let columns = [];
+      let datas = [];
+      if (params.columns && params.data) {
+        columns = params.columns;
+        datas = params.data;
+      } else {
+        columns = this.allColumns;
+        if (!("original" in params)) params.original = true;
+        datas = params.original ? this.data : this.rebuildData;
+      }
+
+      let noHeader = false;
+      if ("noHeader" in params) noHeader = params.noHeader;
+
+      const data = Csv(columns, datas, params, noHeader);
+      if (params.callback) params.callback(data);
+      else ExportCsv.download(params.filename, data);
+    },
     exportData(type) {
       if (type === 1) {
-        dealDataBeforeToCsv(this.$refs.table.data);
-        this.$refs.table.exportCsv({
-          filename: "空侧人工"
-        });
+        let table = {};
+        table.data = this.baseContent;
+        table.columns = this.baseHeader;
+        table.filename = "空侧人工";
+        dealDataBeforeToCsv(table.data);
+        this.exportCsv(table);
       } else if (type === 2) {
         this.$refs.table.exportCsv({
           filename: "Sorting and filtering data",
