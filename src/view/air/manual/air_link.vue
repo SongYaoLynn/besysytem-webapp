@@ -245,9 +245,6 @@ export default {
           department,
           link,
           id
-        },
-        meta: {
-          title: `动态路由-${id}`
         }
       };
       this.$router.push(route);
@@ -283,7 +280,6 @@ export default {
     })
       .then(res => {
         // 错误判断
-        console.log(res.data);
         if (!res.data.statistics.length) {
           this.$Message.info("未找到数据");
           console.log("未找到数据");

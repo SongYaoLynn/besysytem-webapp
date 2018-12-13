@@ -27,7 +27,7 @@ export const login = req => {
   });
   console.log(paramObj);
   // 此处写的不严谨，应该先判断USER_MAP[paramObj.userName].token是否有效，否则会返回奇怪的值
-  return {token: USER_MAP[paramObj.userName].token};
+  return { token: USER_MAP[paramObj.userName].token };
 };
 //
 export const getUserInfo = req => {

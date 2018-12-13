@@ -84,7 +84,7 @@ import { VTable, VPagination } from "vue-easytable";
 // 导出到excel
 import XLSX from "xlsx";
 
-import {exportMergeTable, tableToSheet} from "@/libs/excel";
+import { exportMergeTable, tableToSheet } from "@/libs/excel";
 import { manualData } from "@/data/manual";
 import { statisticsData } from "@/data/statistics";
 import { tableHeader } from "@/data/statisticsTable";
@@ -462,9 +462,7 @@ export default {
           );
           startCol += checkedLinks[link];
         }
-        data["!merges"].push(
-          this.getMerge(0, startCol, 1, startCol)
-        );
+        data["!merges"].push(this.getMerge(0, startCol, 1, startCol));
       }
       wb.Sheets["Sheet1"] = data; //通过json_to_sheet转成单页(Sheet)数据
       console.log(wb.Sheets["Sheet1"]);

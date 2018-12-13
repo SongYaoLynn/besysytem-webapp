@@ -118,13 +118,29 @@ export default {
       this.modalTitle = params.row.name + "分摊明细";
       this.modalVisible = true;
     },
-    updateData() {
+    getData() {
+      if (Object.keys(this.$route.params).length) {
+        getManualLinkDetailData({
+          startTime: this.$route.params.startTime,
+          endTime: this.$route.params.endTime,
+          department: "扁平件责任中心",
+          link: this.$route.params.link
+        })
+          .then(res => {
+            this.updateData(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    },
+    updateData(data) {
       this.linkDetailData = {};
       this.linkDetailHeader = [];
       this.linkDetailContent = [];
       this.currentDepartment = this.$route.params.department;
       this.currentLink = this.$route.params.link;
-      this.linkDetailData = this.dataList[this.$route.params.id];
+      this.linkDetailData = data;
       this.linkDetailHeader = this.linkDetailHeaderTemp;
       this.linkDetailContent = this.linkDetailData.detail;
     },
@@ -157,23 +173,10 @@ export default {
     }
   },
   activated() {
-    getManualLinkDetailData({
-      startTime: this.$route.params.startTime,
-      endTime: this.$route.params.endTime,
-      department: "扁平件责任中心",
-      link: this.$route.params.link
-    })
-      .then(res => {
-        console.log(res.data);
-        this.saveData(res.data, this.$route.params.id);
-        this.updateData(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    this.getData();
   },
   watch: {
-    $route: "updateData"
+    $route: "getData"
   }
 };
 </script>

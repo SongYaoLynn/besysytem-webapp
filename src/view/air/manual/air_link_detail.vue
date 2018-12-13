@@ -2,7 +2,7 @@
   <div>
     <Card >
       <div class="search-con search-con-top">
-          <h3>{{currentDepartment}}-{{currentLink}} 详细信息</h3>
+        <h3>{{currentDepartment}}-{{currentLink}} 详细信息</h3>
       </div>
       <i-table :columns="linkDetailHeader" :data="linkDetailContent"  height="500" size="small" ref="table"></i-table>
       <br>
@@ -118,20 +118,12 @@ export default {
       this.modalTitle = params.row.name + "分摊明细";
       this.modalVisible = true;
     },
-    updateData() {
-      this.linkDetailData = {};
-      this.linkDetailHeader = [];
-      this.linkDetailContent = [];
-      this.currentDepartment = this.$route.params.department;
-      this.currentLink = this.$route.params.link;
-      this.linkDetailData = this.dataList[this.$route.params.id];
-      this.linkDetailHeader = this.linkDetailHeaderTemp;
-      this.linkDetailContent = this.linkDetailData.detail;
-    },
+    //可以删掉
     saveData(data, name) {
       let dataSave = Object.assign(data);
       this.dataList[name] = dataSave;
     },
+    //================
     exportData(type) {
       if (type === 1) {
         dealDataBeforeToCsv(this.$refs.table.data);
@@ -152,28 +144,41 @@ export default {
       }
     },
     test() {
-      this.saveData(this.data1, this.$route.params.id);
-      console.log(this.dataList);
+      // this.saveData(this.data1, this.$route.params.id);
+      // console.log(this.dataList);
+    },
+    updateData(data) {
+      this.linkDetailData = {};
+      this.linkDetailHeader = [];
+      this.linkDetailContent = [];
+      this.currentDepartment = this.$route.params.department;
+      this.currentLink = this.$route.params.link;
+      this.linkDetailData = data;
+      this.linkDetailHeader = this.linkDetailHeaderTemp;
+      this.linkDetailContent = this.linkDetailData.detail;
+    },
+    getData() {
+      if (Object.keys(this.$route.params).length) {
+        getManualLinkDetailData({
+          startTime: this.$route.params.startTime,
+          endTime: this.$route.params.endTime,
+          department: "空侧责任中心",
+          link: this.$route.params.link
+        })
+          .then(res => {
+            this.updateData(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
     }
   },
-  activated() {
-    getManualLinkDetailData({
-      startTime: this.$route.params.startTime,
-      endTime: this.$route.params.endTime,
-      department: "空侧责任中心",
-      link: this.$route.params.link
-    })
-      .then(res => {
-        console.log(res.data);
-        this.saveData(res.data, this.$route.params.id);
-        this.updateData(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  mounted() {
+    this.getData();
   },
   watch: {
-    $route: "updateData"
+    $route: "getData"
   }
 };
 </script>
